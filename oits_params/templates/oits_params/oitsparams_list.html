@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <p>
+    <a href="{% url 'params_add' %}" class="btn btn-primary">Add Run</a>
+  </p>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>UID</th>
+        <th>Status</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for params in oitsParams %}
+        <tr>
+          <td>{{ params.uid }}</td>
+          <td>{{ params.get_status_display }}</td>
+          <td>{{ params.created_at }}</td>
+        </tr>
+      {% empty %}
+        <tr class="table-active">
+          <td colspan="3">No data</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
