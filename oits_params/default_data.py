@@ -11,7 +11,7 @@ esa_mission = '''{
     "thilb":[0.0],
     "thiub": [1.0],
     "t01": "2022 Jun 01",
-    "tmin1": "2022 May 11", 
+    "tmin1": "2022 May 11",
     "tmax1": "2022 Jun 11",
     "t0": [0.0,363.0,145.0,315.0,163.0,652.0,1094.0],
     "tmin": [0.0,350.0,120.0,300.0,150.0,620.0,1000.0],
@@ -22,9 +22,7 @@ esa_mission = '''{
     "Duration": 0.0,
     "PROGRADE_ONLY": true,
     "RENDEZVOUS": true,
-    "Ndata": 0,
-    "RUN_TIME": 1,
-    "NBSP": 1.0,
-    "BSP": 1
+    "Ndata": 1000,
+    "RUN_TIME": 1
 }
 '''

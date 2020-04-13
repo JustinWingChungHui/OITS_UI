@@ -30,3 +30,7 @@ python manage.py runserver
 ```
 
 
+Run the OITS runner
+```bash
+python manage.py oits_runner
+```
