@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <p>
+    <a href="{% url 'params_list' %}" class="btn btn-primary">Back</a>
+  </p>
+  <table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>id</th>
+            <td>{{ oitsParams.id }}</td>
+        </tr>
+        <tr>
+            <th>uid</th>
+            <td>{{ oitsParams.uid }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td id="{{params.id}}_status" class="status">{{ oitsParams.get_status_display }}</td>
+        </tr>
+        <tr>
+            <th>Created At</th>
+            <td>{{ oitsParams.created_at }}</td>
+        </tr>
+        <tr>
+            <th>Parameters</th>
+            <td>{{ oitsParams.parameters }}</td>
+        </tr>
+    </tbody>
+  </table>
+  <p>
+    {% if oitsParams.status == "C"  %}
+        <a id="download-results" href="{% get_media_prefix %}{{oitsParams.uid}}.zip" class="btn btn-primary">
+            Download Results
+        </a>
+
+    {% else %}
+        <a id="download-results" href="{% get_media_prefix %}{{oitsParams.uid}}.zip" class="btn btn-primary d-none">
+            Download Results
+        </a>
+    {% endif %}
+
+  </p>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/monitor-status.js' %}"></script>
+{% endblock %}

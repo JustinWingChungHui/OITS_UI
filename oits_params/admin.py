@@ -1,3 +1,4 @@
 from django.contrib import admin
+from oits_params.models import OitsParams
 
-# Register your models here.
+admin.site.register(OitsParams)

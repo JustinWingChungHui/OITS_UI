@@ -25,7 +25,7 @@ SECRET_KEY = 'yg3c-x-&!ug-!@#2uw-ugx-r4@94^cs4#fkc5np7w#x_x(e=se'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['oits.justinhui.com']
 
 
 # Application definition
@@ -127,5 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+MEDIA_ROOT = '~/media/OITS_UI/'
+MEDIA_URL = '/media/'
 
 OITS_LIBRARY = '~/OITS_AH_Linux/'
