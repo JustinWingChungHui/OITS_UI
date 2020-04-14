@@ -9,7 +9,7 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>UID</th>
+        <th>Description</th>
         <th>Status</th>
         <th>Created At</th>
       </tr>
@@ -21,7 +21,7 @@
                 <a href="/runs/{{ params.id }}"/>{{ params.id }}</a>
             </td>
             <td>
-                <a href="/runs/{{ params.id }}"/>{{ params.uid }}</a>
+                <a href="/runs/{{ params.id }}"/>{{ params.description }}</a>
             </td>
             <td id="{{params.id}}_status" class="status">{{ params.get_status_display }}</td>
             <td>{{ params.created_at }}</td>

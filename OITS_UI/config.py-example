@@ -33,3 +33,13 @@ MEDIA_URL = '/media/'
 
 # Path to the OITS_AH_Linux directory.
 OITS_LIBRARY = '~/OITS_AH_Linux/'
+
+# Names of the spice kernal files
+SPICE_KERNAL_FILENAMES = [
+        "de430.bsp",
+        "BORISOV_24-11-2019.bsp",
+        "extrasolar.bsp",
+    ]
+
+# Maximum length of OITS run
+MAX_RUN_TIME = 20

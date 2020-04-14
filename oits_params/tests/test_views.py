@@ -6,13 +6,13 @@ class ViewsTestCase(TestCase):
 
     def setUp(self):
 
-        self.params = OitsParams.objects.create(parameters='{test: "test"}')
+        self.params = OitsParams.objects.create(parameters='{test: "test"}', description='mydesc')
 
     def test_list_view_loads(self):
         client = Client()
         response = client.get('/runs/')
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(str(self.params.uid).encode() in response.content)
+        self.assertTrue(b'mydesc' in response.content)
 
     def test_create_view_loads(self):
         client = Client()

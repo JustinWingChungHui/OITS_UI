@@ -11,6 +11,9 @@ import zipfile
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
+        '''
+        Always on task that checks for any new runs
+        '''
 
         while True:
             home = str(Path.home())
@@ -18,8 +21,8 @@ class Command(BaseCommand):
 
             print('settings: {0}'.format(oits_lib_path))
 
+            # Finds the OITS_optimizer.py in the OITS_AH_Linux folder
             sys.path.insert(0, oits_lib_path)
-
             from OITS_optimizer import OITS_optimizer
 
             print('Starting OitsRunner')
@@ -36,6 +39,11 @@ class Command(BaseCommand):
                 run.save()
 
                 params = json.loads(run.parameters)
+
+                # Append Spice driectory to filenames
+                bsp = []
+                for file in params['BSP']:
+                    bsp.append(oits_lib_path + "SPICE/" + file)
 
                 OITS_instance = OITS_optimizer()
 
@@ -67,8 +75,8 @@ class Command(BaseCommand):
                         1 if params['RENDEZVOUS'] else 0,
                         params['Ndata'],
                         params['RUN_TIME'],
-                        1, #NBSP
-                        [oits_lib_path + "SPICE/de430.bsp"], #BSP
+                        len(bsp), #NBSP
+                        bsp, #BSP
                         oits_lib_path + "SPICE/naif0012.tls") #LSF
 
                 OITS_instance.convert_python_to_C()
@@ -90,6 +98,10 @@ class Command(BaseCommand):
 
 
     def create_archive(self, run):
+        '''
+        Gets all the files and stores them as a zip in media directory
+        for download
+        '''
 
         print('creating archive')
 

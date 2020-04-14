@@ -1,11 +1,31 @@
 {% extends 'base.html' %}
+{% load static %}
+
 
 {% load crispy_forms_tags %}
 
 {% block content %}
+
+   <div class="form-group">
+    <label for="exampleData">Example Data</label>
+    <select class="form-control" id="exampleDataSelect">
+
+    {% for example in examples %}
+       <option value="{{example.value}}">
+           {{example.name}}
+       </option>
+    {% endfor %}
+
+    </select>
+  </div>
+
   <form method="post" novalidate>
     {% csrf_token %}
     {{ form|crispy }}
     <button type="submit" class="btn btn-success">Start OITS</button>
   </form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/example-select.js' %}"></script>
 {% endblock %}
