@@ -42,9 +42,12 @@ var MonitorStatus = {
             console.log(data);
             obj.innerHTML = data.status_description
 
-            if(data.status === 'C') {
+            if (data.status === 'C') {
                 $('download-results').removeClass('d-none');
                 obj.style.backgroundColor = "lime";
+
+            } else if (data.status === 'P') {
+                obj.style.backgroundColor = "orange";
             }
         });
 

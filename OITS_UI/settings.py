@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from OITS_UI import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +21,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'yg3c-x-&!ug-!@#2uw-ugx-r4@94^cs4#fkc5np7w#x_x(e=se'
+SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config.DEBUG
 
 ALLOWED_HOSTS = ['oits.justinhui.com']
 
@@ -80,12 +81,7 @@ WSGI_APPLICATION = 'OITS_UI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+DATABASES = config.DATABASES
 
 
 # Password validation
@@ -124,10 +120,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = config.STATIC_URL
+STATIC_ROOT = config.STATIC_ROOT
 
-MEDIA_ROOT = '~/media/OITS_UI/'
-MEDIA_URL = '/media/'
+MEDIA_ROOT = config.MEDIA_ROOT
+MEDIA_URL = config.MEDIA_URL
 
-OITS_LIBRARY = '~/OITS_AH_Linux/'
+OITS_LIBRARY = config.OITS_LIBRARY

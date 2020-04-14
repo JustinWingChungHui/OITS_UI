@@ -19,18 +19,21 @@ Install the Python requirements from the `requirements.txt`
 pip install -r requirements.txt
 ```
 
+Copy `OITS_UI\config.py-example` to `OITS_UI\config.py`
+And edit `OITS_UI\config.py` to suit your own server settings
+
 Create the database
 ```bash
 python manage.py migrate
 ```
 
-Run the app
+Run the web app
 ```bash
 python manage.py runserver
 ```
 
 
-Run the OITS runner
+Run the OITS runner in a spearate thread
 ```bash
 python manage.py oits_runner
 ```

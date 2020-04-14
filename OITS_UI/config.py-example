@@ -1,0 +1,35 @@
+import os
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'd5f5hdvhc((-6iv3tonrdpoyir^6x2k3i^uk6eg@70wyfel6fs'
+
+# Runs webiste in debug mode
+DEBUG = True
+
+# Database where parameters and runs are stored
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
+
+
+# Where css and javascript is stored
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# URL to serve static content
+STATIC_URL = '/static/'
+
+# Where the results files are stored
+MEDIA_ROOT = '~/media/OITS_UI/'
+
+# URL to download results files from
+MEDIA_URL = '/media/'
+
+# Path to the OITS_AH_Linux directory.
+OITS_LIBRARY = '~/OITS_AH_Linux/'

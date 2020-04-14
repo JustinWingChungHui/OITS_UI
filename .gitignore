@@ -114,3 +114,6 @@ GitHub.sublime-settings
 !.vscode/launch.json
 !.vscode/extensions.json
 .history
+
+# Deployment settings
+OITS_UI/config.py

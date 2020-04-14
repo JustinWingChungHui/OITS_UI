@@ -1,4 +1,8 @@
 from django.contrib import admin
 from oits_params.models import OitsParams
 
-admin.site.register(OitsParams)
+
+class OitsParamsAdmin(admin.ModelAdmin):
+    list_display  = ('id', 'uid', 'status', 'created_at')
+
+admin.site.register(OitsParams, OitsParamsAdmin)

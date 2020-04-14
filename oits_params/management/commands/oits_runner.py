@@ -40,7 +40,7 @@ class Command(BaseCommand):
                 OITS_instance = OITS_optimizer()
 
                 OITS_instance.set_OITS(
-                        1 if params['trajectory_optimization'] else 0,
+                        0 if params['trajectory_optimization'] else 1,
                         str(run.uid),
                         params['Nbody'],
                         params['ID'],
