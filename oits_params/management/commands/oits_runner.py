@@ -45,44 +45,50 @@ class Command(BaseCommand):
                 for file in params['BSP']:
                     bsp.append(oits_lib_path + "SPICE/" + file)
 
-                OITS_instance = OITS_optimizer()
+                try:
+                    OITS_instance = OITS_optimizer()
 
-                OITS_instance.set_OITS(
-                        0 if params['trajectory_optimization'] else 1,
-                        str(run.uid),
-                        params['Nbody'],
-                        params['ID'],
-                        params['NIP'],
-                        params['rIP'],
-                        params['thetaIP'],
-                        params['thiIP'],
-                        params['thetalb'],
-                        params['thetaub'],
-                        params['thilb'],
-                        params['thiub'],
-                        params['t01'],
-                        params['tmin1'],
-                        params['tmax1'],
-                        params['t0'],
-                        params['tmin'],
-                        params['tmax'],
-                        params['Periacon'],
-                        params['dVcon'],
-                        params['Perihcon'],
-                        0, # Peroflag
-                        params['Duration'],
-                        1 if params['PROGRADE_ONLY'] else 0,
-                        1 if params['RENDEZVOUS'] else 0,
-                        params['Ndata'],
-                        params['RUN_TIME'],
-                        len(bsp), #NBSP
-                        bsp, #BSP
-                        oits_lib_path + "SPICE/naif0012.tls") #LSF
+                    OITS_instance.set_OITS(
+                            0 if params['trajectory_optimization'] else 1,
+                            str(run.uid),
+                            params['Nbody'],
+                            params['ID'],
+                            params['NIP'],
+                            params['rIP'],
+                            params['thetaIP'],
+                            params['thiIP'],
+                            params['thetalb'],
+                            params['thetaub'],
+                            params['thilb'],
+                            params['thiub'],
+                            params['t01'],
+                            params['tmin1'],
+                            params['tmax1'],
+                            params['t0'],
+                            params['tmin'],
+                            params['tmax'],
+                            params['Periacon'],
+                            params['dVcon'],
+                            params['Perihcon'],
+                            0, # Peroflag
+                            params['Duration'],
+                            1 if params['PROGRADE_ONLY'] else 0,
+                            1 if params['RENDEZVOUS'] else 0,
+                            params['Ndata'],
+                            params['RUN_TIME'],
+                            len(bsp), #NBSP
+                            bsp, #BSP
+                            oits_lib_path + "SPICE/naif0012.tls") #LSF
 
-                OITS_instance.convert_python_to_C()
-                OITS_instance.OITS()
+                    OITS_instance.convert_python_to_C()
+                    OITS_instance.OITS()
 
-                print('Processing {0} finished'.format(run.uid))
+                    print('Processing {0} finished'.format(run.uid))
+
+                except Exception as e:
+                    file = open(str(run.uid) + "_error.txt", "w")
+                    file.write(e)
+                    file.close()
 
                 self.create_archive(run)
 
@@ -109,7 +115,7 @@ class Command(BaseCommand):
         zip_name = settings.MEDIA_ROOT.replace('~',home) +  str(run.uid) + '.zip'
         print('Writing to {0}'.format(zip_name))
 
-        zf = zipfile.ZipFile(zip_name, mode='w')
+        zf = zipfile.ZipFile(zip_name,'w', zipfile.ZIP_DEFLATED)
 
         cwd = os.getcwd()
         for f in os.listdir(cwd):

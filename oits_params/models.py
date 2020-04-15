@@ -45,8 +45,11 @@ class OitsParams(models.Model):
 
     def delete(self, *args, **kwargs):
 
-        home = settings.MEDIA_ROOT.replace('~', str(Path.home()))
-        os.remove(os.path.join(home, str(self.uid) + '.zip'))
+        try:
+            home = settings.MEDIA_ROOT.replace('~', str(Path.home()))
+            os.remove(os.path.join(home, str(self.uid) + '.zip'))
+        except:
+            pass
 
         super().delete(*args, **kwargs)  # Call the "real" save() method.
 
