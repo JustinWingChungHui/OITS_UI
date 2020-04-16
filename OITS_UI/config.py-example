@@ -28,6 +28,8 @@ STATIC_URL = '/static/'
 # Where the results files are stored
 MEDIA_ROOT = '~/media/OITS_UI/'
 
+ALLOWED_HOSTS = ['127.0.0.1']
+
 # URL to download results files from
 MEDIA_URL = '/media/'
 
