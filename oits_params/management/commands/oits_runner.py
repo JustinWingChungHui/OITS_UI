@@ -97,7 +97,7 @@ class Command(BaseCommand):
 
                 print('Completed {0}'.format(run.uid))
 
-            time.sleep(30)
+            time.sleep(10)
 
 
 
