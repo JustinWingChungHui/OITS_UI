@@ -72,6 +72,8 @@ class OitsParams(models.Model):
         if not isinstance(params['Nbody'], int) or params['Nbody'] <= 1:
             raise ValidationError('Nbody must be an integer > 1')
 
+        NBody = params['Nbody']
+
         if not is_list_of_strings(params['ID']):
             raise ValidationError('ID must be an array of strings')
 
@@ -82,9 +84,23 @@ class OitsParams(models.Model):
             ['rIP','thetaIP','thiIP','thetalb','thetaub','thilb','thiub','t0','tmin','tmax',
             'Periacon','dVcon','Perihcon'])
 
-        check_date_string('t01', params['t01'])
-        check_date_string('tmin1', params['tmin1'])
-        check_date_string('tmax1', params['tmax1'])
+        check_array_size(params,
+            ['rIP','thetaIP','thiIP','thetalb','thetaub','thilb','thiub'], params['NIP'])
+
+        check_array_size(params,
+            ['ID','t0','tmin','tmax','Periacon','dVcon'], NBody)
+
+        if len(params['rIP']) != params['NIP']:
+            raise ValidationError('rIP must be an array of size NIP')
+
+        check_date_string('t01',params['t01'])
+        check_date_string('tmin1',params['tmin1'])
+        check_date_string('tmax1',params['tmax1'])
+
+        check_array_size(params,['Perihcon'],NBody-1)
+
+        if params['Periacon'][0] != 0 or params['Periacon'][NBody-1] != 0:
+            raise ValidationError('Periacon[0] and Periacon[NBody-1] must be 0')
 
         if not (isinstance(params['Duration'], float) or isinstance(params['Duration'], int)):
             raise ValidationError('Duration must be a float')
@@ -135,6 +151,11 @@ def check_date_string(name, value):
         datetime.datetime.strptime(value, '%Y %b %d')
     except:
         raise ValidationError('{0} must be a date string of format yyyy MMM dd'.format(name))
+
+def check_array_size(params, param_names, size):
+    for name in param_names:
+        if len(params[name]) != size:
+            raise ValidationError('{0} must be an array of size {1}'.format(name, size))
 
 
 
