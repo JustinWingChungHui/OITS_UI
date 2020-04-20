@@ -77,6 +77,17 @@ class OitsParams(models.Model):
         if not is_list_of_strings(params['ID']):
             raise ValidationError('ID must be an array of strings')
 
+        previous_id = ''
+        for id in params['ID']:
+            if not id in settings.SPICE_IDS:
+                raise ValidationError('ID must be in {0}'.format(settings.SPICE_IDS))
+
+            if id == 'INTERMEDIATE POINT' and previous_id == 'INTERMEDIATE POINT':
+                raise ValidationError('ID cannot have consecutive "INTERMEDIATE POINT"s')
+
+            previous_id = id
+
+
         if not isinstance(params['NIP'], int) or params['NIP'] < 0:
             raise ValidationError('NIP must be an integer >= 0')
 
@@ -98,9 +109,6 @@ class OitsParams(models.Model):
         check_date_string('tmax1',params['tmax1'])
 
         check_array_size(params,['Perihcon'],NBody-1)
-
-        if params['Periacon'][0] != 0 or params['Periacon'][NBody-1] != 0:
-            raise ValidationError('Periacon[0] and Periacon[NBody-1] must be 0')
 
         if not (isinstance(params['Duration'], float) or isinstance(params['Duration'], int)):
             raise ValidationError('Duration must be a float')

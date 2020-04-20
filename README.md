@@ -21,6 +21,7 @@ pip install -r requirements.txt
 
 Copy `OITS_UI\config.py-example` to `OITS_UI\config.py`
 And edit `OITS_UI\config.py` to suit your own server settings
+Makes sure that the folders in the config.py exist on your computer
 
 Create the database
 ```bash
@@ -33,7 +34,7 @@ python manage.py runserver
 ```
 
 
-Run the OITS runner in a spearate thread
+Run the OITS runner in a separate thread
 ```bash
 python manage.py oits_runner
 ```

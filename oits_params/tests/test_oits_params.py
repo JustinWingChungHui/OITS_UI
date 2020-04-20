@@ -38,9 +38,14 @@ class OitsParamsTestCase(TestCase):
         model.parameters = self.get_altered_params('Nbody', 0)
         self.assertRaises(ValidationError, model.clean)
 
-    def test_clean_ID(self):
+    def test_clean_ID_Invalid_Type(self):
         model = OitsParams()
-        model.parameters = self.get_altered_params('ID', 'blah')
+        model.parameters = self.get_altered_params('ID', '1')
+        self.assertRaises(ValidationError, model.clean)
+
+    def test_clean_ID_Invalid_Length(self):
+        model = OitsParams()
+        model.parameters = self.get_altered_params('ID', ['1'])
         self.assertRaises(ValidationError, model.clean)
 
     def test_clean_NIP(self):
@@ -74,8 +79,14 @@ class OitsParamsTestCase(TestCase):
         model.parameters = self.get_altered_params('t0', [1.0, 2.0])
         self.assertRaises(ValidationError, model.clean)
 
-    def test_clean_Periacon_invalid_values(self):
+
+    def test_clean_ID_Contains_Invalid_Names(self):
         model = OitsParams()
-        model.parameters = self.get_altered_params('Periacon', [200.0,200.0,200.0,200.0,200.0,200.0,200.0])
+        model.parameters = self.get_altered_params('ID', ["3","INTERMEDIATE POINT","3","5","INTERMEDIATE POINT","Not a correct name"])
         self.assertRaises(ValidationError, model.clean)
 
+
+    def test_clean_ID_Contains_Consecutive_Intermediate_Points(self):
+        model = OitsParams()
+        model.parameters = self.get_altered_params('ID', ["3","INTERMEDIATE POINT","INTERMEDIATE POINT","5","3","9"])
+        self.assertRaises(ValidationError, model.clean)
