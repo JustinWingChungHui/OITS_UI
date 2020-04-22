@@ -112,7 +112,9 @@ class Command(BaseCommand):
         print('creating archive')
 
         home = str(Path.home())
-        zip_name = settings.MEDIA_ROOT.replace('~',home) +  str(run.uid) + '.zip'
+        filename = str(run.uid) + '.zip'
+
+        zip_name = os.path.join(settings.MEDIA_ROOT.replace('~',home), filename)
         print('Writing to {0}'.format(zip_name))
 
         zf = zipfile.ZipFile(zip_name,'w', zipfile.ZIP_DEFLATED)

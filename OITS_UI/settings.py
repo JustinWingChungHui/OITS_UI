@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'oits_params.apps.OitsParamsConfig',
+    'results_viewer',
 ]
 
 MIDDLEWARE = [
