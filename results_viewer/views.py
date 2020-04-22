@@ -56,4 +56,4 @@ def process_text(contents):
 
             result.append(output_row)
 
-    return "\n".join(result)[0:100]
+    return "\n".join(result)
