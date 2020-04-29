@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'crispy_forms',
     'oits_params.apps.OitsParamsConfig',
     'results_viewer',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -134,5 +136,4 @@ SPICE_IDS = config.SPICE_IDS
 
 MAX_RUN_TIME = config.MAX_RUN_TIME
 
-
-
+CORS_ORIGIN_WHITELIST = config.CORS_ORIGIN_WHITELIST

@@ -17,4 +17,13 @@ class ViewsTestCase(TestCase):
         response = client.get('/results/8dc3920c-89b1-447c-adba-46b786b16cf5/csv/')
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(b'MAIN\n7.0744693e+08,-0.31869156,-0.96279682,4.9987514e-05' in response.content)
+        self.assertTrue(b'PROBE\n7.0744693e+08,-0.31869156,-0.96279682,4.9987514e-05' in response.content)
+
+
+    def test_get_sorted_results_csv(self):
+
+        client = Client()
+        response = client.get('/results/8dc3920c-89b1-447c-adba-46b786b16cf5/sorted_csv/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b'PROBE\n7.0744693e+08,-0.31869156,-0.96279682,4.9987514e-05' in response.content)

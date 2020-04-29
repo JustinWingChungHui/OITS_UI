@@ -62,3 +62,9 @@ SPICE_IDS = [
 
 # Maximum length of OITS run
 MAX_RUN_TIME = 20
+
+CORS_ORIGIN_WHITELIST = [
+        "https://oits.justinhui.com",
+        "http://localhost:8080",
+        "https://localhost:8080"
+    ]
