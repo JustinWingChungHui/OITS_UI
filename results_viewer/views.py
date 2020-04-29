@@ -133,6 +133,6 @@ def get_contents_by_time(contents_by_time, contents):
                 r[85:100].strip(),
             ])
 
-            contents_by_time[time] = output_row
+            contents_by_time[float(time)] = output_row
 
     return contents_by_time
