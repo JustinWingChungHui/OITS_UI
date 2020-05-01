@@ -77,17 +77,6 @@ class OitsParams(models.Model):
         if not is_list_of_strings(params['ID']):
             raise ValidationError('ID must be an array of strings')
 
-        previous_id = ''
-        for id in params['ID']:
-            if not id in settings.SPICE_IDS:
-                raise ValidationError('ID must be in {0}'.format(settings.SPICE_IDS))
-
-            if id == 'INTERMEDIATE POINT' and previous_id == 'INTERMEDIATE POINT':
-                raise ValidationError('ID cannot have consecutive "INTERMEDIATE POINT"s')
-
-            previous_id = id
-
-
         if not isinstance(params['NIP'], int) or params['NIP'] < 0:
             raise ValidationError('NIP must be an integer >= 0')
 
@@ -100,6 +89,34 @@ class OitsParams(models.Model):
 
         check_array_size(params,
             ['ID','t0','tmin','tmax','Periacon','dVcon'], NBody)
+
+        IDS = [ col[0] for col in settings.SPICE_IDS ]
+        previous_id = ''
+  
+        for id in params['ID']:
+            if not id in IDS:
+                raise ValidationError('ID must be in {0}'.format(IDS))
+
+            if id == 'INTERMEDIATE POINT' and previous_id == 'INTERMEDIATE POINT':
+                raise ValidationError('ID cannot have consecutive "INTERMEDIATE POINT"s')
+
+            previous_id = id
+
+
+        Aphelia = [ col[1] for col in settings.SPICE_IDS ]
+        previous_Aphelion = Aphelia[IDS.index(params['ID'][0])]
+
+        for i in range(1, NBody):
+            Perihelion = params['Perihcon'][i-1]
+            Aphelion = Aphelia[IDS.index(params['ID'][i])]
+            Min_Aphelion = min([Aphelion,previous_Aphelion])
+	    
+            if i > 0:
+                if Min_Aphelion < Perihelion:
+                     raise ValidationError('Perihelion Constraint {0} too large'.format(params['Perihcon'][i-1]))
+            previous_Aphelion = Aphelion
+
+
 
         if len(params['rIP']) != params['NIP']:
             raise ValidationError('rIP must be an array of size NIP')
