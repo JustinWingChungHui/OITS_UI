@@ -38,6 +38,12 @@ class OitsParamsTestCase(TestCase):
         model.parameters = self.get_altered_params('Nbody', 0)
         self.assertRaises(ValidationError, model.clean)
 
+    def test_clean_Nbody_Too_Large(self):
+        model = OitsParams()
+        model.parameters = self.get_altered_params('Nbody', 10)
+        self.assertRaises(ValidationError, model.clean)
+
+
     def test_clean_ID_Invalid_Type(self):
         model = OitsParams()
         model.parameters = self.get_altered_params('ID', '1')
@@ -90,3 +96,6 @@ class OitsParamsTestCase(TestCase):
         model = OitsParams()
         model.parameters = self.get_altered_params('ID', ["3","INTERMEDIATE POINT","INTERMEDIATE POINT","5","3","9"])
         self.assertRaises(ValidationError, model.clean)
+
+
+

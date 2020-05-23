@@ -69,8 +69,8 @@ class OitsParams(models.Model):
         if not isinstance(params['trajectory_optimization'], bool):
             raise ValidationError('trajectory_optimization must be true or false')
 
-        if not isinstance(params['Nbody'], int) or params['Nbody'] <= 1:
-            raise ValidationError('Nbody must be an integer > 1')
+        if not isinstance(params['Nbody'], int) or params['Nbody'] <= 1 or params['Nbody'] > 7:
+            raise ValidationError('Nbody must be an integer > 1 and < 8')
 
         NBody = params['Nbody']
 
@@ -92,7 +92,7 @@ class OitsParams(models.Model):
 
         IDS = [ col[0] for col in settings.SPICE_IDS ]
         previous_id = ''
-  
+
         for id in params['ID']:
             if not id in IDS:
                 raise ValidationError('ID must be in {0}'.format(IDS))
@@ -110,7 +110,7 @@ class OitsParams(models.Model):
             Perihelion = params['Perihcon'][i-1]
             Aphelion = Aphelia[IDS.index(params['ID'][i])]
             Min_Aphelion = min([Aphelion,previous_Aphelion])
-	    
+
             if i > 0:
                 if Min_Aphelion < Perihelion:
                      raise ValidationError('Perihelion Constraint {0} too large'.format(params['Perihcon'][i-1]))
