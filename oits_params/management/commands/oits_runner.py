@@ -15,18 +15,18 @@ class Command(BaseCommand):
         Always on task that checks for any new runs
         '''
 
+        home = str(Path.home())
+        oits_lib_path = settings.OITS_LIBRARY.replace('~', home)
+
+        print('settings: {0}'.format(oits_lib_path))
+
+        # Finds the OITS_optimizer.py in the OITS_AH_Linux folder
+        sys.path.insert(0, oits_lib_path)
+        from OITS_optimizer import OITS_optimizer
+
         while True:
-            home = str(Path.home())
-            oits_lib_path = settings.OITS_LIBRARY.replace('~', home)
-
-            print('settings: {0}'.format(oits_lib_path))
-
-            # Finds the OITS_optimizer.py in the OITS_AH_Linux folder
-            sys.path.insert(0, oits_lib_path)
-            from OITS_optimizer import OITS_optimizer
 
             print('Starting OitsRunner')
-
             new_runs = OitsParams.objects.filter(status=OitsParams.NEW).order_by('created_at')
 
             print('New runs:')
