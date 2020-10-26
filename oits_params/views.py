@@ -81,8 +81,9 @@ def mission_api(request):
         return JsonResponse(model_to_dict(model))
 
     else:
-        models = OitsParams.objects.all()
-        return JsonResponse(serializers.serialize('json', models), safe=False)
+        models = list(OitsParams.objects.all())
+        json_result = serializers.serialize('json', models,fields=('id','uid', 'description', 'status'))
+        return HttpResponse(json_result, content_type='application/json')
 
 
 @require_http_methods(["GET", "DELETE"])
