@@ -82,7 +82,7 @@ def mission_api(request):
 
     else:
         models = list(OitsParams.objects.all())
-        json_result = serializers.serialize('json', models,fields=('id','uid', 'description', 'status'))
+        json_result = serializers.serialize('json', models,fields=('id','uid', 'description', 'status', 'created_at'))
         return HttpResponse(json_result, content_type='application/json')
 
 
