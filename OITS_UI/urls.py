@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('oits_params.urls')),
     path('', include('results_viewer.urls')),
+    path('', include('mission_api.urls')),
 ]
 
 if settings.DEBUG:
