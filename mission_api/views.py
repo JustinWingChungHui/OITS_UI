@@ -19,7 +19,7 @@ class MissionViewSet(viewsets.ViewSet):
         '''
 
         queryset = OitsParams.objects.all(
-                        ).order_by('created_at')
+                        ).order_by('-created_at')
 
         serializer = OitsParamsListSerializer(queryset, many=True)
         return Response(serializer.data)
