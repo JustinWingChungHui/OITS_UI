@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny #IsAuthenticated
 
@@ -57,14 +58,19 @@ class MissionViewSet(viewsets.ViewSet):
         Creates a new mission record
         '''
 
-        received_json_data = json.loads(request.body)
+        try:
+            received_json_data = json.loads(request.body)
 
-        model = OitsParams()
-        model.description = received_json_data['description']
-        model.parameters = request.body
-        model.clean()
-        model.save()
+            model = OitsParams()
+            model.description = received_json_data['description']
+            model.parameters = request.body.decode('utf-8')
+            model.clean()
+            model.save()
 
 
-        serializer = OitsParamsSerializer(model)
-        return Response(serializer.data)
+            serializer = OitsParamsSerializer(model)
+            return Response(serializer.data)
+
+        except Exception as e:
+            raise ValidationError(str(e))
+

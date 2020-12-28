@@ -25,6 +25,19 @@ class ViewsTestCase(TestCase):
         self.assertTrue(len(data) > 0)
 
 
+    def test_mission_api_create_validation_error(self):
+
+        client = APIClient()
+        data = json.loads(esa_mission)
+        data['description'] = 'test data'
+        data['Nbody'] = 4
+        response = client.post('/api/mission/', data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content)
+
+
+
     def test_mission_api_create(self):
 
         client = APIClient()
