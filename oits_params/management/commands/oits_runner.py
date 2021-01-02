@@ -24,13 +24,12 @@ class Command(BaseCommand):
         sys.path.insert(0, oits_lib_path)
         from OITS_optimizer import OITS_optimizer
 
+        print('Starting OitsRunner')
+
         while True:
 
-            print('Starting OitsRunner')
-            new_runs = OitsParams.objects.filter(status=OitsParams.NEW).order_by('created_at')
 
-            print('New runs:')
-            print(new_runs)
+            new_runs = OitsParams.objects.filter(status=OitsParams.NEW).order_by('created_at')
 
             for run in new_runs:
 
@@ -40,7 +39,7 @@ class Command(BaseCommand):
 
                 params = json.loads(run.parameters)
 
-                # Append Spice driectory to filenames
+                # Append Spice directory to filenames
                 bsp = []
                 for file in params['BSP']:
                     bsp.append(oits_lib_path + "SPICE/" + file)

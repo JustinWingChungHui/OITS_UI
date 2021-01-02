@@ -83,3 +83,20 @@ class ViewsTestCase(TestCase):
         count = OitsParams.objects.filter(id=model.id).count()
 
         self.assertEqual(0, count)
+
+
+    def test_mission_api_delete_readonly(self):
+
+        model = OitsParams()
+        model.description = 'description'
+        model.parameters = esa_mission
+        model.readonly = True
+        model.save()
+
+        client = APIClient()
+        response = client.delete('/api/mission/{0}/'.format(model.id), format='json')
+        self.assertEqual(response.status_code, 400)
+
+        count = OitsParams.objects.filter(id=model.id).count()
+
+        self.assertEqual(1, count)

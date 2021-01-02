@@ -39,6 +39,8 @@ class OitsParams(models.Model):
     parameters = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    readonly = models.BooleanField(default=False)
+
     def __str__(self):
         return str(self.uid)
 
@@ -154,13 +156,13 @@ class OitsParams(models.Model):
 
 
 def is_list_of_strings(lst):
-    if lst and isinstance(lst, list):
+    if lst != None and isinstance(lst, list):
         return all(isinstance(elem, str) for elem in lst)
     else:
         return False
 
 def is_list_of_floats(lst):
-    if lst and isinstance(lst, list):
+    if lst != None and isinstance(lst, list):
         return all((isinstance(elem, float) or isinstance(elem, int)) for elem in lst)
     else:
         return False

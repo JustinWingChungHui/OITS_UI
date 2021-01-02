@@ -46,10 +46,11 @@ class MissionViewSet(viewsets.ViewSet):
         queryset = OitsParams.objects.all()
 
         mission = get_object_or_404(queryset, pk=pk)
-
-        mission.delete()
-
-        return Response('OK')
+        if mission.readonly:
+            raise ValidationError('Mission is readonly')
+        else:
+            mission.delete()
+            return Response('OK')
 
 
 

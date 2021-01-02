@@ -8,7 +8,7 @@ class OitsParamsSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = OitsParams
-        fields = ('id','uid', 'description', 'status', 'parameters', 'created_at')
+        fields = ('id','uid', 'description', 'status', 'parameters', 'created_at', 'readonly')
 
 
 class OitsParamsListSerializer(serializers.ModelSerializer):
@@ -18,4 +18,4 @@ class OitsParamsListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OitsParams
-        fields = ('id','uid', 'description', 'status', 'created_at')
+        fields = ('id','uid', 'description', 'status', 'created_at', 'readonly')
