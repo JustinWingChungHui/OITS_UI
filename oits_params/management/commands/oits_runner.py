@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from oits_params.models import OitsParams
+from results_viewer.models import TrajectoryResult
 from pathlib import Path
 import json
 import os
@@ -93,6 +94,9 @@ class Command(BaseCommand):
 
                 run.status = OitsParams.COMPLETE
                 run.save()
+
+                result = TrajectoryResult(oits_params = run)
+                result.populate_values_from_output_file()
 
                 print('Completed {0}'.format(run.uid))
 

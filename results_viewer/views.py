@@ -1,12 +1,16 @@
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from results_viewer.models import TrajectoryResult
 from pathlib import Path
 from zipfile import ZipFile
 import os
 
+def get_results_values(request, id):
+    result = get_object_or_404(TrajectoryResult, oits_params_id=id)
+    return HttpResponse(result.values, content_type='text/plain')
 
 
-# Create your views here.
 def get_paths(request, uid):
 
     home = str(Path.home())
