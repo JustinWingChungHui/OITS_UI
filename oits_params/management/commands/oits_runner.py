@@ -39,7 +39,7 @@ class Command(BaseCommand):
                     self.executing_processes[run.id].terminate()
                     run.status = OitsParams.CANCELLED
                     run.save()
-                    self.executing_threads.pop(run.id)
+                    self.executing_processes.pop(run.id)
 
 
             new_runs = OitsParams.objects.filter(status=OitsParams.NEW).order_by('created_at')
