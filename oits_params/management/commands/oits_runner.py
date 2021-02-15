@@ -3,6 +3,7 @@ from django.conf import settings
 from oits_params.models import OitsParams
 from results_viewer.models import TrajectoryResult
 from pathlib import Path
+from multiprocessing import Process
 import json
 import os
 import sys
@@ -10,6 +11,8 @@ import time
 import zipfile
 
 class Command(BaseCommand):
+
+    executing_processes = {}
 
     def handle(self, *args, **options):
         '''
@@ -23,87 +26,107 @@ class Command(BaseCommand):
 
         # Finds the OITS_optimizer.py in the OITS_AH_Linux folder
         sys.path.insert(0, oits_lib_path)
-        from OITS_optimizer import OITS_optimizer
 
         print('Starting OitsRunner')
 
         while True:
+
+            # Ceancel any process that have been requested to be cancelled
+            cancelling_runs = OitsParams.objects.filter(status=OitsParams.CANCELLING).order_by('created_at')
+
+            for run in cancelling_runs:
+                if run.id in self.executing_processes:
+                    self.executing_processes[run.id].terminate()
+                    run.status = OitsParams.CANCELLED
+                    run.save()
+                    self.executing_threads.pop(run.id)
 
 
             new_runs = OitsParams.objects.filter(status=OitsParams.NEW).order_by('created_at')
 
             for run in new_runs:
 
-                print('Processing {0}'.format(run.uid))
-                run.status = OitsParams.PROCESSING
-                run.save()
+                if (len(self.executing_processes) < 3):
 
-                params = json.loads(run.parameters)
+                    process = Process(target=self.execute_run, args=(run, oits_lib_path))
+                    self.executing_processes[run.id] = process
+                    process.start()
 
-                # Append Spice directory to filenames
-                bsp = []
-                for file in params['BSP']:
-                    bsp.append(oits_lib_path + "SPICE/" + file)
-
-                try:
-                    OITS_instance = OITS_optimizer()
-
-                    OITS_instance.set_OITS(
-                            0 if params['trajectory_optimization'] else 1,
-                            str(run.uid),
-                            params['Nbody'],
-                            params['ID'],
-                            params['NIP'],
-                            params['rIP'],
-                            params['thetaIP'],
-                            params['thiIP'],
-                            params['thetalb'],
-                            params['thetaub'],
-                            params['thilb'],
-                            params['thiub'],
-                            params['t01'].lower(),
-                            params['tmin1'].lower(),
-                            params['tmax1'].lower(),
-                            params['t0'],
-                            params['tmin'],
-                            params['tmax'],
-                            params['Periacon'],
-                            params['dVcon'],
-                            params['Perihcon'],
-                            0, # Peroflag
-                            params['Duration'],
-                            1 if params['PROGRADE_ONLY'] else 0,
-                            1 if params['RENDEZVOUS'] else 0,
-                            params['Ndata'],
-                            params['RUN_TIME'],
-                            len(bsp), #NBSP
-                            bsp, #BSP
-                            oits_lib_path + "SPICE/naif0012.tls") #LSF
-
-                    OITS_instance.convert_python_to_C()
-                    OITS_instance.OITS()
-
-                    print('Processing {0} finished'.format(run.uid))
-
-                except Exception as e:
-                    file = open(str(run.uid) + "_error.txt", "w")
-                    file.write(e)
-                    file.close()
-
-                self.create_archive(run)
-
-                run.status = OitsParams.COMPLETE
-                run.save()
-
-                result = TrajectoryResult(oits_params = run)
-                result.populate_values_from_output_file()
-
-                print('Completed {0}'.format(run.uid))
 
             time.sleep(10)
 
 
+    def execute_run(self, run, oits_lib_path):
 
+        print('Processing {0}'.format(run.uid))
+        run.status = OitsParams.PROCESSING
+        run.save()
+
+        params = json.loads(run.parameters)
+
+        # Append Spice directory to filenames
+        bsp = []
+        for file in params['BSP']:
+            bsp.append(oits_lib_path + "SPICE/" + file)
+
+        try:
+            from OITS_optimizer import OITS_optimizer
+            OITS_instance = OITS_optimizer()
+
+            OITS_instance.set_OITS(
+                    0 if params['trajectory_optimization'] else 1,
+                    str(run.uid),
+                    params['Nbody'],
+                    params['ID'],
+                    params['NIP'],
+                    params['rIP'],
+                    params['thetaIP'],
+                    params['thiIP'],
+                    params['thetalb'],
+                    params['thetaub'],
+                    params['thilb'],
+                    params['thiub'],
+                    params['t01'].lower(),
+                    params['tmin1'].lower(),
+                    params['tmax1'].lower(),
+                    params['t0'],
+                    params['tmin'],
+                    params['tmax'],
+                    params['Periacon'],
+                    params['dVcon'],
+                    params['Perihcon'],
+                    0, # Peroflag
+                    params['Duration'],
+                    1 if params['PROGRADE_ONLY'] else 0,
+                    1 if params['RENDEZVOUS'] else 0,
+                    params['Ndata'],
+                    params['RUN_TIME'],
+                    len(bsp), #NBSP
+                    bsp, #BSP
+                    oits_lib_path + "SPICE/naif0012.tls") #LSF
+
+            OITS_instance.convert_python_to_C()
+            OITS_instance.OITS()
+
+            print('Processing {0} finished'.format(run.uid))
+
+            run.status = OitsParams.COMPLETE
+            self.create_archive(run)
+
+            result = TrajectoryResult(oits_params = run)
+            result.populate_values_from_output_file()
+
+        except Exception as e:
+            result = TrajectoryResult(oits_params = run)
+            result.exception = str(e)
+            result.save()
+            run.status = OitsParams.ERROR
+
+
+        run.save()
+        print('Completed {0}'.format(run.uid))
+
+        self.executing_threads.pop(run.id)
 
 
     def create_archive(self, run):

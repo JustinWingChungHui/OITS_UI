@@ -21,10 +21,17 @@ class OitsParams(models.Model):
     NEW = 'N'
     PROCESSING = 'P'
     COMPLETE = 'C'
+    CANCELLING = 'A'
+    CANCELLED = 'X'
+    ERROR = 'E'
+
     STATUS_CHOICES = [
         ('N', 'New'),
         ('P', 'Processing'),
         ('C', 'Complete'),
+        ('A', 'Cancelling'),
+        ('X', 'Cancelled'),
+        ('E', 'Error'),
     ]
 
     uid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)

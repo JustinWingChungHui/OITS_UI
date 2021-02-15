@@ -3,7 +3,6 @@ from django.test import TestCase, Client, override_settings
 from oits_params.default_data import esa_mission
 from oits_params.models import OitsParams
 from results_viewer.models import TrajectoryResult
-import glob
 import os
 import shutil
 
@@ -16,15 +15,6 @@ class ViewsTestCase(TestCase):
 
     def setUp(self):
         pass
-
-
-    def test_get_csv(self):
-
-        client = Client()
-        response = client.get('/results/{0}/paths/'.format(test_guid))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(b'PROBE\n7.0739567e+08,-0.32819958,-0.95950251,4.9871959e-05' in response.content)
 
 
     def test_get_results_values(self):
@@ -48,7 +38,7 @@ class ViewsTestCase(TestCase):
 class ModelsTestCast(TestCase):
 
     def setUp(self):
-        
+
         source = os.path.join(test_file_path, test_guid + '.zip')
 
         self.destination_file_path = os.path.join(settings.MEDIA_ROOT, test_guid + '.zip')
@@ -64,4 +54,10 @@ class ModelsTestCast(TestCase):
         result.populate_values_from_output_file()
 
         self.assertTrue('PROBE\n7.0739567e+08,-0.32819958,-0.95950251,4.9871959e-05' in result.values)
-        self.assertFalse(os.path.isfile(self.destination_file_path))
+        #self.assertFalse(os.path.isfile(self.destination_file_path))
+
+        client = Client()
+        response = client.get('/results/{0}/values/'.format(oitsParams.id))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b'PROBE\n7.0739567e+08,-0.32819958,-0.95950251,4.9871959e-05' in response.content)

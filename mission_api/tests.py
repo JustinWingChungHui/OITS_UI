@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from rest_framework.test import APIClient
 from oits_params.models import OitsParams
 from oits_params.default_data import esa_mission
@@ -100,3 +100,36 @@ class ViewsTestCase(TestCase):
         count = OitsParams.objects.filter(id=model.id).count()
 
         self.assertEqual(1, count)
+
+    def test_mission_api_cancel_mission_readonly(self):
+
+        model = OitsParams()
+        model.description = 'description'
+        model.parameters = esa_mission
+        model.status = 'N'
+        model.readonly = True
+        model.save()
+
+        client = Client()
+
+        response = client.post('/api/mission/{0}/cancel/'.format(model.id), format='json')
+        self.assertEqual(response.status_code, 400)
+
+
+    def test_mission_api_cancel_mission(self):
+
+        model = OitsParams()
+        model.description = 'description'
+        model.parameters = esa_mission
+        model.status = 'P'
+        model.readonly = False
+        model.save()
+
+        client = Client()
+        response = client.post('/api/mission/{0}/cancel/'.format(model.id), format='json')
+        self.assertEqual(response.status_code, 200)
+        json.loads(response.content)
+
+        new_model = OitsParams.objects.get(pk=model.id)
+        self.assertEqual('A', new_model.status)
+

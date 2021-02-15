@@ -1,6 +1,8 @@
 import json
 from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_http_methods
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny #IsAuthenticated
@@ -10,7 +12,7 @@ from oits_params.models import OitsParams
 
 
 # ViewSets define the view behavior for Django REST
-class MissionViewSet(viewsets.ViewSet):
+class MissionViewSet(viewsets.ModelViewSet):
 
     permission_classes = (AllowAny,)
 
@@ -74,4 +76,33 @@ class MissionViewSet(viewsets.ViewSet):
 
         except Exception as e:
             raise ValidationError(str(e))
+
+
+
+
+    @action(detail=True, methods=['post'])
+    def cancel(self, request, pk=None):
+        '''
+        Cancels a mission
+        '''
+
+        queryset = OitsParams.objects.all()
+        mission = get_object_or_404(queryset, pk=pk)
+
+        if mission.readonly:
+            raise ValidationError('Mission is readonly')
+
+        if mission.status in [OitsParams.NEW, OitsParams.PROCESSING]:
+            mission.status = OitsParams.CANCELLING
+            mission.save()
+
+        serializer = OitsParamsSerializer(mission)
+
+        return Response(serializer.data)
+
+
+
+
+
+
 

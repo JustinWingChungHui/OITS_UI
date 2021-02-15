@@ -78,7 +78,8 @@ class TrajectoryResult(models.Model):
         self.values = '\n'.join(results)
         self.save()
 
-        os.remove(filename_path)
+        # Keep files for the moment
+        #os.remove(filename_path)
 
 
     def _get_contents_by_time(self, contents_by_time, contents):
